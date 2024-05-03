@@ -1,29 +1,37 @@
-import { TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import { Component } from "@angular/core";
 
-describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-    }).compileComponents();
-  });
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  componentTitle = "My To Do List";
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
+  filter: "all" | "active" | "done" = "all";
 
-  it(`should have the 'todo-list' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('todo-list');
-  });
+  allItems = [
+    { description: "eat", done: true },
+    { description: "sleep", done: false },
+    { description: "play", done: false },
+    { description: "laugh", done: false },
+  ];
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, todo-list');
-  });
-});
+  get items() {
+    if (this.filter === "all") {
+      return this.allItems;
+    }
+    return this.allItems.filter((item) =>
+      this.filter === "done" ? item.done : !item.done
+    );
+  }
+
+  addItem(description: string) {
+    if (!description) return;
+
+    this.allItems.unshift({
+      description,
+      done: false
+    });
+  }
+}
